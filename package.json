@@ -1,0 +1,23 @@
+{
+  "name": "beautiful-countdown",
+  "version": "1.0.0",
+  "description": "Multi-record Beautiful Countdown Desktop App",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.antigravity.countdown",
+    "productName": "Countdown App",
+    "win": {
+      "target": ["portable"]
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.1.5",
+    "electron-builder": "^24.13.3"
+  }
+}
