@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-theme="modern">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="background-animation"></div>
-    
+
     <div class="wood-texture-bg hidden"></div>
     <div class="office-bg hidden"></div>
 
@@ -29,7 +31,7 @@
                     <option value="office">🏢 商务办公</option>
                     <option value="ios6">📱 拟物复古</option>
                 </select>
-                <button id="open-calendar-btn" class="secondary-btn sm-btn nav-btn">📅 二级日历</button>
+                <button id="open-calendar-btn" class="secondary-btn sm-btn nav-btn">📅 日历</button>
                 <button id="add-new-btn" class="primary-btn sm-btn nav-btn">+ 添加事件</button>
             </div>
         </header>
@@ -78,7 +80,8 @@
                 <input type="hidden" id="editing-event-id" value="">
                 <div class="input-group">
                     <label for="event-name">事件名称</label>
-                    <input type="text" id="event-name" class="input-element" placeholder="例如：新年、项目上线..." autocomplete="off">
+                    <input type="text" id="event-name" class="input-element" placeholder="例如：新年、项目上线..."
+                        autocomplete="off">
                 </div>
                 <div class="input-group">
                     <label for="event-time">目标时间 (精确到秒)</label>
@@ -103,7 +106,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <div class="time-blocks">
                 <div class="time-block">
                     <span class="time-value days">00</span>
@@ -125,7 +128,7 @@
                     <span class="time-label">秒</span>
                 </div>
             </div>
-            
+
             <div class="progress-container">
                 <div class="progress-bar"></div>
             </div>
@@ -134,4 +137,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

@@ -228,11 +228,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Check if any event falls on this date
-            const hasEvent = countdowns.some(c => {
+            const dayEvents = countdowns.filter(c => {
                 const d = new Date(c.targetTime);
                 return d.getDate() === i && d.getMonth() === month && d.getFullYear() === year;
             });
-            if (hasEvent) dayDiv.classList.add('has-event');
+            
+            if (dayEvents.length > 0) {
+                dayDiv.classList.add('has-event');
+            }
+
+            // Click listener to display events
+            dayDiv.addEventListener('click', () => {
+                if (dayEvents.length > 0) {
+                    const eventList = dayEvents.map(e => {
+                        const d = new Date(e.targetTime);
+                        return `• ${e.name} (${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')})`;
+                    }).join('\n');
+                    alert(`📅 ${year}年${month + 1}月${i}日的事件：\n\n${eventList}`);
+                } else {
+                    alert(`📅 ${year}年${month + 1}月${i}日 当前没有倒计时记录。`);
+                }
+            });
 
             calDaysGrid.appendChild(dayDiv);
         }
