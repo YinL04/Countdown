@@ -113,28 +113,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressEl = cardEl.querySelector('.progress-bar');
             const titleEl = cardEl.querySelector('.card-title');
 
-            if (distance <= 0) {
-                [daysEl, hoursEl, minutesEl, secondsEl].forEach(el => el.textContent = '00');
-                progressEl.style.width = '100%';
-                if (!titleEl.textContent.includes('已结束')) {
-                    titleEl.textContent = data.name + ' (已结束)';
+            const isPast = distance <= 0;
+            const absDistance = Math.abs(distance);
+
+            if (isPast) {
+                if (!titleEl.textContent.includes('已过去')) {
+                    titleEl.textContent = data.name + ' (已过去)';
                 }
-                return;
+                progressEl.style.width = '100%';
+            } else {
+                if (titleEl.textContent.includes('已过去')) {
+                    titleEl.textContent = data.name; 
+                }
+                const totalDuration = data.targetTime - data.startTime;
+                let currentProg = totalDuration > 0 ? 100 - (distance / totalDuration * 100) : 100;
+                progressEl.style.width = `${Math.max(0, Math.min(100, currentProg))}%`;
             }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const days = Math.floor(absDistance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((absDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((absDistance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((absDistance % (1000 * 60)) / 1000);
 
             updateAnimate(daysEl, formatTime(days));
             updateAnimate(hoursEl, formatTime(hours));
             updateAnimate(minutesEl, formatTime(minutes));
             updateAnimate(secondsEl, formatTime(seconds));
-
-            const totalDuration = data.targetTime - data.startTime;
-            let currentProg = totalDuration > 0 ? 100 - (distance / totalDuration * 100) : 100;
-            progressEl.style.width = `${Math.max(0, Math.min(100, currentProg))}%`;
         });
     };
 
@@ -175,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const selectedDate = new Date(timeStr).getTime();
         const now = new Date().getTime();
-        if (selectedDate <= now) return alert('请选择一个未来的时间！');
 
         const eId = editingEventId.value;
         if (eId) {

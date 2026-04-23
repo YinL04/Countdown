@@ -132,6 +132,84 @@ html[data-theme="ios6"] input.input-element:focus { outline: 2px solid #5c8ae6; 
 html[data-theme="ios6"] ::-webkit-calendar-picker-indicator { filter: none; }
 
 /* --------------------------------
+   THEME: Windows 98 (Classic)
+-----------------------------------*/
+html[data-theme="win98"] {
+    --primary-color: #000080;
+    --primary-hover: #000080;
+    --text-main: #000000;
+    --text-muted: #000000;
+    --glass-bg: #c0c0c0;
+    --glass-border: #dfdfdf;
+    --glass-shadow: none;
+    --bg-dark: #008080;
+    --danger-color: #ff0000;
+    --font-family: "MS Sans Serif", Tahoma, sans-serif;
+    --card-radius: 0px;
+    --btn-radius: 0px;
+}
+html[data-theme="win98"] .background-animation { display: none; }
+html[data-theme="win98"] .wood-texture-bg { display: none; }
+html[data-theme="win98"] .glass-panel, html[data-theme="win98"] .glass-container {
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    background: #c0c0c0;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000; border-bottom: 2px solid #000000;
+    box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
+}
+html[data-theme="win98"] .card-header, html[data-theme="win98"] .modal-header {
+    background: linear-gradient(90deg, #000080, #1084d0);
+    padding: 3px 5px; margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+    color: white; border: none; align-items: center;
+}
+html[data-theme="win98"] .modal-header { margin: -2rem -2rem 1.5rem -2rem; }
+html[data-theme="win98"] .card-title, html[data-theme="win98"] .modal-header h2 {
+    color: white; font-weight: bold; font-size: 1rem;
+}
+html[data-theme="win98"] .nav-brand h1 {
+    background: none; color: white; -webkit-text-fill-color: initial; font-weight: bold;
+}
+html[data-theme="win98"] .brand-svg { stroke: white; }
+html[data-theme="win98"] button.primary-btn, html[data-theme="win98"] button.secondary-btn, html[data-theme="win98"] select, html[data-theme="win98"] .cal-nav-btn, html[data-theme="win98"] .cal-day {
+    background: #c0c0c0; color: #000;
+    border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000; border-bottom: 2px solid #000000;
+    box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
+}
+html[data-theme="win98"] button.primary-btn:active, html[data-theme="win98"] button.secondary-btn:active {
+    border-top: 2px solid #000000; border-left: 2px solid #000000;
+    border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
+    box-shadow: inset 1px 1px #808080;
+}
+html[data-theme="win98"] .time-block {
+    background: #ffffff;
+    border-top: 2px solid #808080; border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
+    box-shadow: inset 1px 1px #000000, inset -1px -1px #dfdfdf;
+}
+html[data-theme="win98"] .time-value { background: none; -webkit-text-fill-color: initial; color: #000; font-weight: bold; }
+html[data-theme="win98"] .time-label { color: #000; }
+html[data-theme="win98"] .separator { color: #000; text-shadow: none; }
+html[data-theme="win98"] .progress-container {
+    background: #ffffff; border-top: 2px solid #808080; border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
+    box-shadow: inset 1px 1px #000000, inset -1px -1px #dfdfdf;
+}
+html[data-theme="win98"] .progress-bar { background: #000080; animation: none; }
+html[data-theme="win98"] input.input-element {
+    background: #ffffff; color: #000;
+    border-top: 2px solid #808080; border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
+    box-shadow: inset 1px 1px #000000, inset -1px -1px #dfdfdf;
+}
+html[data-theme="win98"] input.input-element:focus { outline: none; }
+html[data-theme="win98"] .close-btn, html[data-theme="win98"] .edit-btn, html[data-theme="win98"] .delete-btn {
+    color: #000; background: #c0c0c0; border: 1px solid #000; padding: 2px; font-size: 1rem; font-weight: bold;
+    border-top: 2px solid #fff; border-left: 2px solid #fff;
+    border-right: 2px solid #000; border-bottom: 2px solid #000;
+}
+
+/* --------------------------------
    GLOBAL STYLES (Use Vars)
 -----------------------------------*/
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); transition: background-color 0.3s, border-color 0.3s, color 0.3s, font-family 0.3s; }
