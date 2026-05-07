@@ -71,10 +71,10 @@ html[data-theme="office"] input.input-element { background: #ffffff; color: #242
 html[data-theme="office"] input.input-element:focus { border-color: var(--primary-color); background: #ffffff; box-shadow: none; }
 html[data-theme="office"] ::-webkit-calendar-picker-indicator { filter: none; }
 
-/* --------------------------------
-   THEME: iOS 6 (Retro / Skeuomorphic)
------------------------------------*/
-html[data-theme="ios6"] {
+/* =========================================
+   THEME: Retro Phone (Skeuomorphic)
+   ========================================= */
+html[data-theme="retro-phone"] {
     --primary-color: #5c8ae6;
     --primary-hover: #4775d1;
     --text-main: #ffffff;
@@ -88,53 +88,53 @@ html[data-theme="ios6"] {
     --card-radius: 10px;
     --btn-radius: 6px;
 }
-html[data-theme="ios6"] .background-animation { display: none; }
-html[data-theme="ios6"] .wood-texture-bg {
+html[data-theme="retro-phone"] .background-animation { display: none; }
+html[data-theme="retro-phone"] .wood-texture-bg {
     display: block; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="4" height="4"><rect width="4" height="4" fill="%233e4249"/><path d="M0 4L4 0M-1 1L1 -1M3 5L5 3" stroke="%232c2f35" stroke-width="1"/></svg>') repeat;
     z-index: 0; pointer-events: none;
 }
-html[data-theme="ios6"] .glass-panel, html[data-theme="ios6"] .glass-container {
+html[data-theme="retro-phone"] .glass-panel, html[data-theme="retro-phone"] .glass-container {
     backdrop-filter: none; -webkit-backdrop-filter: none;
     border: 1px solid #1a202c; border-top: 1px solid #a0aec0;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 6px 12px rgba(0,0,0,0.6);
 }
-html[data-theme="ios6"] .nav-brand h1 {
+html[data-theme="retro-phone"] .nav-brand h1 {
     background: none; color: #fff; -webkit-text-fill-color: initial;
     text-shadow: 0 -1px 1px rgba(0,0,0,0.8);
 }
-html[data-theme="ios6"] .brand-svg { stroke: #fff; filter: drop-shadow(0 -1px 0 #000); }
-html[data-theme="ios6"] button.primary-btn {
+html[data-theme="retro-phone"] .brand-svg { stroke: #fff; filter: drop-shadow(0 -1px 0 #000); }
+html[data-theme="retro-phone"] button.primary-btn {
     background: linear-gradient(to bottom, #86a6eb, #416bc7); border: 1px solid #1e3a8a;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.5); text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
 }
-html[data-theme="ios6"] button.primary-btn:active { background: #416bc7; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6); }
-html[data-theme="ios6"] button.secondary-btn {
+html[data-theme="retro-phone"] button.primary-btn:active { background: #416bc7; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6); }
+html[data-theme="retro-phone"] button.secondary-btn {
     background: linear-gradient(to bottom, #f7fafc, #cbd5e1); border: 1px solid #64748b; color: #1e293b;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.3); text-shadow: 0 1px 0 #fff;
 }
-html[data-theme="ios6"] .time-block {
+html[data-theme="retro-phone"] .time-block {
     background: linear-gradient(to bottom, #f1f5f9, #94a3b8); border-color: #475569;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.5); border-radius: 6px;
 }
-html[data-theme="ios6"] .time-value { background: none; -webkit-text-fill-color: initial; color: #0f172a; text-shadow: 0 1px 0px rgba(255,255,255,0.5); font-weight: bold; }
-html[data-theme="ios6"] .time-label { color: #334155; text-shadow: 0 1px 0px rgba(255,255,255,0.4); }
-html[data-theme="ios6"] .separator { text-shadow: 0 -1px 1px #000; }
-html[data-theme="ios6"] .progress-container { background: #cbd5e1; border: 1px solid #475569; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); }
-html[data-theme="ios6"] .progress-bar {
+html[data-theme="retro-phone"] .time-value { background: none; -webkit-text-fill-color: initial; color: #0f172a; text-shadow: 0 1px 0px rgba(255,255,255,0.5); font-weight: bold; }
+html[data-theme="retro-phone"] .time-label { color: #334155; text-shadow: 0 1px 0px rgba(255,255,255,0.4); }
+html[data-theme="retro-phone"] .separator { text-shadow: 0 -1px 1px #000; }
+html[data-theme="retro-phone"] .progress-container { background: #cbd5e1; border: 1px solid #475569; box-shadow: inset 0 2px 4px rgba(0,0,0,0.4); }
+html[data-theme="retro-phone"] .progress-bar {
     background: linear-gradient(to bottom, #60a5fa, #2563eb); border: 1px solid #1e3a8a; border-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4); animation: none;
 }
-html[data-theme="ios6"] input.input-element { 
+html[data-theme="retro-phone"] input.input-element { 
     background: #fff; color: #000; border: 1px solid #475569;
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); border-radius: 6px;
 }
-html[data-theme="ios6"] input.input-element:focus { outline: 2px solid #5c8ae6; }
-html[data-theme="ios6"] ::-webkit-calendar-picker-indicator { filter: none; }
+html[data-theme="retro-phone"] input.input-element:focus { outline: 2px solid #5c8ae6; }
+html[data-theme="retro-phone"] ::-webkit-calendar-picker-indicator { filter: none; }
 
-/* --------------------------------
-   THEME: Windows 98 (Classic)
------------------------------------*/
-html[data-theme="win98"] {
+/* =========================================
+   THEME: Retro Computer (Classic)
+   ========================================= */
+html[data-theme="retro-pc"] {
     --primary-color: #000080;
     --primary-hover: #000080;
     --text-main: #000000;
@@ -148,62 +148,62 @@ html[data-theme="win98"] {
     --card-radius: 0px;
     --btn-radius: 0px;
 }
-html[data-theme="win98"] .background-animation { display: none; }
-html[data-theme="win98"] .wood-texture-bg { display: none; }
-html[data-theme="win98"] .glass-panel, html[data-theme="win98"] .glass-container {
+html[data-theme="retro-pc"] .background-animation { display: none; }
+html[data-theme="retro-pc"] .wood-texture-bg { display: none; }
+html[data-theme="retro-pc"] .glass-panel, html[data-theme="retro-pc"] .glass-container {
     backdrop-filter: none; -webkit-backdrop-filter: none;
     background: #c0c0c0;
     border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
     border-right: 2px solid #000000; border-bottom: 2px solid #000000;
     box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
 }
-html[data-theme="win98"] .card-header, html[data-theme="win98"] .modal-header {
+html[data-theme="retro-pc"] .card-header, html[data-theme="retro-pc"] .modal-header {
     background: linear-gradient(90deg, #000080, #1084d0);
     padding: 3px 5px; margin: -1.5rem -1.5rem 1.5rem -1.5rem;
     color: white; border: none; align-items: center;
 }
-html[data-theme="win98"] .modal-header { margin: -2rem -2rem 1.5rem -2rem; }
-html[data-theme="win98"] .card-title, html[data-theme="win98"] .modal-header h2 {
+html[data-theme="retro-pc"] .modal-header { margin: -2rem -2rem 1.5rem -2rem; }
+html[data-theme="retro-pc"] .card-title, html[data-theme="retro-pc"] .modal-header h2 {
     color: white; font-weight: bold; font-size: 1rem;
 }
-html[data-theme="win98"] .nav-brand h1 {
+html[data-theme="retro-pc"] .nav-brand h1 {
     background: none; color: white; -webkit-text-fill-color: initial; font-weight: bold;
 }
-html[data-theme="win98"] .brand-svg { stroke: white; }
-html[data-theme="win98"] button.primary-btn, html[data-theme="win98"] button.secondary-btn, html[data-theme="win98"] select, html[data-theme="win98"] .cal-nav-btn, html[data-theme="win98"] .cal-day {
+html[data-theme="retro-pc"] .brand-svg { stroke: white; }
+html[data-theme="retro-pc"] button.primary-btn, html[data-theme="retro-pc"] button.secondary-btn, html[data-theme="retro-pc"] select, html[data-theme="retro-pc"] .cal-nav-btn, html[data-theme="retro-pc"] .cal-day {
     background: #c0c0c0; color: #000;
     border-top: 2px solid #ffffff; border-left: 2px solid #ffffff;
     border-right: 2px solid #000000; border-bottom: 2px solid #000000;
     box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
 }
-html[data-theme="win98"] button.primary-btn:active, html[data-theme="win98"] button.secondary-btn:active {
+html[data-theme="retro-pc"] button.primary-btn:active, html[data-theme="retro-pc"] button.secondary-btn:active {
     border-top: 2px solid #000000; border-left: 2px solid #000000;
     border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
     box-shadow: inset 1px 1px #808080;
 }
-html[data-theme="win98"] .time-block {
+html[data-theme="retro-pc"] .time-block {
     background: #ffffff;
     border-top: 2px solid #808080; border-left: 2px solid #808080;
     border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
     box-shadow: inset 1px 1px #000000, inset -1px -1px #dfdfdf;
 }
-html[data-theme="win98"] .time-value { background: none; -webkit-text-fill-color: initial; color: #000; font-weight: bold; }
-html[data-theme="win98"] .time-label { color: #000; }
-html[data-theme="win98"] .separator { color: #000; text-shadow: none; }
-html[data-theme="win98"] .progress-container {
+html[data-theme="retro-pc"] .time-value { background: none; -webkit-text-fill-color: initial; color: #000; font-weight: bold; }
+html[data-theme="retro-pc"] .time-label { color: #000; }
+html[data-theme="retro-pc"] .separator { color: #000; text-shadow: none; }
+html[data-theme="retro-pc"] .progress-container {
     background: #ffffff; border-top: 2px solid #808080; border-left: 2px solid #808080;
     border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
     box-shadow: inset 1px 1px #000000, inset -1px -1px #dfdfdf;
 }
-html[data-theme="win98"] .progress-bar { background: #000080; animation: none; }
-html[data-theme="win98"] input.input-element {
+html[data-theme="retro-pc"] .progress-bar { background: #000080; animation: none; }
+html[data-theme="retro-pc"] input.input-element {
     background: #ffffff; color: #000;
     border-top: 2px solid #808080; border-left: 2px solid #808080;
     border-right: 2px solid #ffffff; border-bottom: 2px solid #ffffff;
     box-shadow: inset 1px 1px #000000, inset -1px -1px #dfdfdf;
 }
-html[data-theme="win98"] input.input-element:focus { outline: none; }
-html[data-theme="win98"] .close-btn, html[data-theme="win98"] .edit-btn, html[data-theme="win98"] .delete-btn {
+html[data-theme="retro-pc"] input.input-element:focus { outline: none; }
+html[data-theme="retro-pc"] .close-btn, html[data-theme="retro-pc"] .edit-btn, html[data-theme="retro-pc"] .delete-btn {
     color: #000; background: #c0c0c0; border: 1px solid #000; padding: 2px; font-size: 1rem; font-weight: bold;
     border-top: 2px solid #fff; border-left: 2px solid #fff;
     border-right: 2px solid #000; border-bottom: 2px solid #000;

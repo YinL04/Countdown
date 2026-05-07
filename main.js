@@ -7,7 +7,7 @@ function createWindow () {
     height: 750,
     minWidth: 800,
     minHeight: 600,
-    autoHideMenuBar: true, // Hide default Windows menu
+    autoHideMenuBar: true, // Hide default system menu
     title: "Beautiful Countdown",
     webPreferences: {
       nodeIntegration: true,
