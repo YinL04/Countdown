@@ -1,123 +1,75 @@
 # Beautiful Countdown App
 
-A modern, elegant, multi-record countdown desktop application built with Electron, integrated with a Python weather + LLM travel advice agent.
+一个基于 Electron 的多事件倒计时桌面应用，支持本地持久化、日历视图、多主题切换，并集成 Python 天气与出行建议 Agent。
 
-> [**中文说明 (Chinese Documentation)**](#-中文说明)
+## 功能
 
-## Features
+- 多倒计时卡片：同时追踪多个事件，精确到秒。
+- 事件日历：在月历中查看事件日期。
+- 多主题：现代科幻、商务办公、复古手机、复古电脑。
+- 本地保存：倒计时数据保存在浏览器本地存储中。
+- 天气建议：为事件填写城市后，可调用 Python Agent 获取天气、出行建议和景点推荐。
+- 可选 LLM 增强：配置 OpenAI 兼容接口后，天气建议会优先使用大模型生成；未配置时使用内置规则。
 
-- **Dashboard Layout:** Beautifully arranged grid to track multiple events simultaneously.
-- **Glassmorphism UI:** Stunning frosted glass card effects with dynamic gradient starfield backgrounds.
-- **Persistent Data:** Active countdowns are securely saved locally so you never lose track of your critical dates.
-- **Real-Time Accuracy:** Calculates precisely down to the second with smooth transition animations.
-- **Weather Travel Advice:** Associate a city with any countdown event to get real-time weather and LLM-powered travel suggestions.
-- **Multi-Theme Support:** Switch between Modern Sci-Fi, Business Office, Retro Phone, and Retro PC themes.
+## 项目结构
 
-## How to Run Locally
+```text
+.
+├── src/
+│   ├── main/              # Electron 主进程
+│   │   └── main.js
+│   └── renderer/          # 页面、样式和渲染层逻辑
+│       ├── index.html
+│       ├── script.js
+│       └── style.css
+├── weather_agent/         # Python 天气与出行建议 Agent
+├── package.json           # Electron 启动与打包配置
+├── requirements.txt       # Python 依赖
+├── .env.example           # 可选 LLM / 天气配置示例
+└── README.md
+```
 
-### Prerequisites
-Make sure you have [Node.js](https://nodejs.org/) and [Python 3.11+](https://www.python.org/) installed on your machine.
+`dist/`、`node_modules/`、`__pycache__/` 等生成产物不属于源码结构，已通过 `.gitignore` 忽略。
 
-### Quick Start
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/YinL04/Countdown.git
-   ```
-2. Navigate into the application directory:
-   ```bash
-   cd Countdown
-   ```
-3. Install Node.js dependencies:
-   ```bash
-   npm install
-   ```
-4. Install Python dependencies (for weather feature):
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. (Optional) Configure LLM API for enhanced travel advice:
-   ```bash
-   cp .env.example .env
-   # Edit .env and set your OPENAI_API_KEY
-   ```
-6. Launch the app:
-   ```bash
-   npm start
-   ```
+## 本地运行
 
-## Technology Stack
-- **Electron**: Desktop framework
-- **HTML / CSS / JavaScript**: Core UI & logic
-- **Python**: Weather data fetching and LLM travel advice generation
-- **wttr.in**: Free weather API (no key required)
-- **OpenAI-compatible API**: LLM for travel suggestions (optional)
+安装 Node.js 依赖：
 
----
+```bash
+npm install
+```
 
-# 中文说明
+安装 Python 依赖：
 
-一个基于 Electron 架构的现代化、优雅的多记录桌面倒计时程序，集成了 Python 天气出行建议 Agent。
+```bash
+pip install -r requirements.txt
+```
 
-## v3.0 新版特性 (最新)
-- **天气出行建议系统**：创建倒计时事件时可关联城市，点击卡片上的天气图标即可实时获取该城市的天气概况、出行建议和景点推荐。
-- **LLM 智能建议**：配置 OpenAI 兼容 API 后，可获得由大语言模型生成的个性化旅行建议；未配置时自动使用内置规则引擎。
-- **卡片式天气面板**：天气概况、出行建议、景点推荐三栏分段展示，清晰直观。
+可选：配置 LLM API。
 
-## v2.1 历史特性
-- **历史时间追踪引擎**：全面放开了对未来时间的限制，您可以自由输入任何过去的日期。一旦时间越过终点，系统将全自动转换为"正向秒表"，精确记录该事件已经过去了多少天、多少小时。
-- **致敬经典的复古电脑皮肤**：新增纯手工代码复原的 `复古电脑` 主题，经典的 #c0c0c0 灰色硬背景、深蓝色拖拽标题栏与复古凹凸立体边框。
+```bash
+cp .env.example .env
+```
 
-## v2.0 历史特性
-- **自定义多主题引擎**：支持"现代科幻(默认)"、"商务办公"、"复古手机"、"复古电脑"四种视觉风格一键切换。
-- **独立智能日历系统**：倒计时事件自动标记在日历网格上，点击日期即可查看当天事件。
-- **事件无缝编辑功能**：卡片支持二次编辑，修改后倒计时自动平滑接管。
+启动应用：
 
-## 基础功能亮点
+```bash
+npm start
+```
 
-- **控制面板布局**：以美观的网格方式同时追踪您的多项事件进程。
-- **毛玻璃 (Glassmorphism) UI**：令人惊艳的玻璃拟物化卡片，搭配动态星空渐变背景特效。
-- **本地数据持久化**：进行中的倒计时将安全地保存在本地缓存中，重启不丢失。
-- **毫秒级精准追踪**：精确运算倒数至每分每秒，配合丝滑流畅的跳动动画效果。
+## 天气 Agent
 
-## 如何在本地运行
+渲染层通过以下命令调用天气 Agent：
 
-### 前置准备
-请确保您的电脑已安装 [Node.js](https://nodejs.org/) 和 [Python 3.11+](https://www.python.org/)。
+```bash
+python -m weather_agent <city>
+```
 
-### 快速启动
-1. 克隆代码库：
-   ```bash
-   git clone https://github.com/YinL04/Countdown.git
-   ```
-2. 进入应用目录：
-   ```bash
-   cd Countdown
-   ```
-3. 安装 Node.js 依赖：
-   ```bash
-   npm install
-   ```
-4. 安装 Python 依赖（天气功能）：
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. （可选）配置 LLM API 以获得增强版出行建议：
-   ```bash
-   cp .env.example .env
-   # 编辑 .env，设置 OPENAI_API_KEY
-   ```
-6. 启动应用：
-   ```bash
-   npm start
-   ```
+如果系统中没有 `python` 命令，天气功能会提示 Python 环境缺失。主倒计时功能不依赖 Python。
 
-## 技术栈
-- **Electron**: 桌面框架
-- **HTML / CSS / JavaScript**: UI 层构建
-- **Python**: 天气数据获取与 LLM 出行建议生成
-- **wttr.in**: 免费天气 API（无需密钥）
-- **OpenAI 兼容 API**: 大语言模型出行建议（可选）
+## 打包
 
-## 开源协议
+```bash
+npm run build
+```
 
-本项目基于 [MIT License](LICENSE) 协议开源。
