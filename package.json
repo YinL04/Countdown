@@ -4,6 +4,7 @@
   "description": "Multi-record Beautiful Countdown Desktop App",
   "main": "src/main/main.js",
   "scripts": {
+    "check": "node scripts/check-js.js",
     "start": "electron .",
     "build": "electron-builder --win portable"
   },

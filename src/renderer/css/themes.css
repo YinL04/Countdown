@@ -1,0 +1,117 @@
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.72);
+    --surface-bg: rgba(255, 255, 255, 0.08);
+    --surface-strong: rgba(255, 255, 255, 0.14);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.22);
+    --bg-dark: #0f172a;
+    --danger-color: #ef4444;
+    --success-color: #22c55e;
+    --warning-color: #f59e0b;
+    --font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --card-radius: 14px;
+    --btn-radius: 10px;
+}
+
+html[data-theme="modern"] {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --text-main: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.72);
+    --surface-bg: rgba(255, 255, 255, 0.08);
+    --surface-strong: rgba(255, 255, 255, 0.14);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: rgba(0, 0, 0, 0.22);
+    --bg-dark: #0f172a;
+    --card-radius: 14px;
+    --btn-radius: 10px;
+}
+
+html[data-theme="office"] {
+    --primary-color: #0078d4;
+    --primary-hover: #005a9e;
+    --text-main: #242424;
+    --text-muted: #616161;
+    --surface-bg: #ffffff;
+    --surface-strong: #f3f2f1;
+    --glass-bg: #ffffff;
+    --glass-border: #edebe9;
+    --glass-shadow: rgba(0, 0, 0, 0.08);
+    --bg-dark: #faf9f8;
+    --danger-color: #d13438;
+    --font-family: "Segoe UI", system-ui, sans-serif;
+    --card-radius: 4px;
+    --btn-radius: 4px;
+}
+
+html[data-theme="retro-phone"] {
+    --primary-color: #5c8ae6;
+    --primary-hover: #4775d1;
+    --text-main: #ffffff;
+    --text-muted: #e6e6e6;
+    --surface-bg: linear-gradient(to bottom, #708096, #4a5568);
+    --surface-strong: rgba(255, 255, 255, 0.14);
+    --glass-bg: linear-gradient(to bottom, #708096, #4a5568);
+    --glass-border: #2d3748;
+    --glass-shadow: rgba(0, 0, 0, 0.7);
+    --bg-dark: #2b2b2b;
+    --font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --card-radius: 10px;
+    --btn-radius: 6px;
+}
+
+html[data-theme="retro-pc"] {
+    --primary-color: #000080;
+    --primary-hover: #000080;
+    --text-main: #000000;
+    --text-muted: #000000;
+    --surface-bg: #c0c0c0;
+    --surface-strong: #ffffff;
+    --glass-bg: #c0c0c0;
+    --glass-border: #dfdfdf;
+    --glass-shadow: none;
+    --bg-dark: #008080;
+    --danger-color: #ff0000;
+    --font-family: "MS Sans Serif", Tahoma, sans-serif;
+    --card-radius: 0;
+    --btn-radius: 0;
+}
+
+html[data-theme="modern"] .glass-panel,
+html[data-theme="modern"] .glass-container {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+html[data-theme="office"] .background-animation,
+html[data-theme="retro-phone"] .background-animation,
+html[data-theme="retro-pc"] .background-animation {
+    display: none;
+}
+
+html[data-theme="retro-phone"] .wood-texture-bg {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, #3e4249 0, #3e4249 4px, #2c2f35 4px, #2c2f35 8px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+html[data-theme="retro-pc"] button,
+html[data-theme="retro-pc"] select,
+html[data-theme="retro-pc"] .glass-panel,
+html[data-theme="retro-pc"] .glass-container,
+html[data-theme="retro-pc"] .calendar-day-cell,
+html[data-theme="retro-pc"] .calendar-event {
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    box-shadow: inset -1px -1px #808080, inset 1px 1px #dfdfdf;
+}

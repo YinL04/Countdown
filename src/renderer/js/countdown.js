@@ -1,4 +1,4 @@
-const { formatTime, updateAnimate } = require('./time');
+import { formatTime, updateAnimate } from './time.js';
 
 function createCountdownRenderer({ elements, getCountdowns, setCountdowns, onEdit, onWeather, onChange }) {
     let globalTimer = null;
@@ -96,4 +96,4 @@ function createCountdownRenderer({ elements, getCountdowns, setCountdowns, onEdi
     return { renderCards, updateAllClocks };
 }
 
-module.exports = { createCountdownRenderer };
+export { createCountdownRenderer };

@@ -3,6 +3,8 @@ function getDomElements() {
         cardsContainer: document.getElementById('cards-container'),
         emptyState: document.getElementById('empty-state'),
         themeSelector: document.getElementById('theme-selector'),
+        importBtn: document.getElementById('import-btn'),
+        exportBtn: document.getElementById('export-btn'),
         addBtn: document.getElementById('add-new-btn'),
         modalOverlay: document.getElementById('modal-overlay'),
         closeModalBtn: document.getElementById('close-modal'),
@@ -13,8 +15,15 @@ function getDomElements() {
         closeCalendarBtn: document.getElementById('close-calendar'),
         calDaysGrid: document.getElementById('cal-days-grid'),
         calMonthYear: document.getElementById('cal-month-year'),
+        calToday: document.getElementById('cal-today'),
         calPrev: document.getElementById('cal-prev'),
         calNext: document.getElementById('cal-next'),
+        calendarSubtitle: document.getElementById('calendar-subtitle'),
+        calendarSummary: document.getElementById('calendar-summary'),
+        calendarView: document.getElementById('calendar-view'),
+        calendarFilter: document.getElementById('calendar-filter'),
+        calendarAddBtn: document.getElementById('calendar-add-btn'),
+        calendarViewBtns: document.querySelectorAll('.calendar-view-btn'),
         eventNameInput: document.getElementById('event-name'),
         eventTimeInput: document.getElementById('event-time'),
         eventCityInput: document.getElementById('event-city'),
@@ -23,6 +32,8 @@ function getDomElements() {
         weatherPanel: document.getElementById('weather-panel'),
         weatherPanelTitle: document.getElementById('weather-panel-title'),
         weatherCityLabel: document.getElementById('weather-city-label'),
+        weatherMeta: document.getElementById('weather-meta'),
+        refreshWeatherBtn: document.getElementById('refresh-weather'),
         closeWeatherBtn: document.getElementById('close-weather'),
         weatherContent: document.getElementById('weather-content'),
         weatherSummary: document.getElementById('weather-summary'),
@@ -33,4 +44,4 @@ function getDomElements() {
     };
 }
 
-module.exports = { getDomElements };
+export { getDomElements };

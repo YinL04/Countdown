@@ -5,14 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beautiful Countdown App</title>
-    <!-- Modern Font -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="background-animation"></div>
-
     <div class="wood-texture-bg hidden"></div>
     <div class="office-bg hidden"></div>
 
@@ -26,25 +24,28 @@
                 <h1>我的倒计时</h1>
             </div>
             <div class="nav-actions">
-                <select id="theme-selector" class="theme-select input-element">
-                    <option value="modern">🌌 现代科幻</option>
-                    <option value="office">🏢 商务办公</option>
-                    <option value="retro-phone">📱 复古手机</option>
-                    <option value="retro-pc">🪟 复古电脑</option>
+                <select id="theme-selector" class="theme-select input-element" aria-label="主题">
+                    <option value="modern">现代科幻</option>
+                    <option value="office">商务办公</option>
+                    <option value="retro-phone">复古手机</option>
+                    <option value="retro-pc">复古电脑</option>
                 </select>
-                <button id="open-calendar-btn" class="secondary-btn sm-btn nav-btn">📅 日历</button>
-                <button id="add-new-btn" class="primary-btn sm-btn nav-btn">+ 添加事件</button>
+                <button id="import-btn" class="secondary-btn sm-btn nav-btn">导入</button>
+                <button id="export-btn" class="secondary-btn sm-btn nav-btn">导出</button>
+                <button id="open-calendar-btn" class="secondary-btn sm-btn nav-btn">日历</button>
+                <button id="add-new-btn" class="primary-btn sm-btn nav-btn">添加事件</button>
             </div>
         </header>
 
         <main class="dashboard">
-            <!-- Weather Panel -->
             <section id="weather-panel" class="weather-panel hidden">
                 <div class="weather-panel-header">
                     <h2 id="weather-panel-title">天气出行建议</h2>
                     <span id="weather-city-label" class="weather-city"></span>
-                    <button id="close-weather" class="close-btn">&times;</button>
+                    <button id="refresh-weather" class="secondary-btn sm-btn hidden">刷新</button>
+                    <button id="close-weather" class="close-btn" aria-label="关闭天气面板">&times;</button>
                 </div>
+                <div id="weather-meta" class="weather-meta hidden"></div>
                 <div id="weather-content" class="weather-content">
                     <div class="weather-section glass-panel">
                         <h3>天气概况</h3>
@@ -66,66 +67,75 @@
                 <div id="weather-error" class="weather-error hidden"></div>
             </section>
 
-            <div id="cards-container" class="cards-grid">
-                <!-- Countdowns will be injected here -->
-            </div>
+            <div id="cards-container" class="cards-grid"></div>
             <div id="empty-state" class="empty-state hidden">
-                <p>目前没有倒数计时，快新建一个吧！</p>
+                <p>目前没有倒计时，添加一个重要日子吧。</p>
             </div>
         </main>
     </div>
 
-    <!-- Calendar Overlay -->
     <div class="modal-overlay hidden" id="calendar-overlay">
         <div class="glass-container modal-box calendar-box">
-            <div class="modal-header">
-                <h2>事件日历</h2>
+            <div class="modal-header calendar-header">
+                <div>
+                    <h2>完整日历</h2>
+                    <p id="calendar-subtitle" class="modal-subtitle">查看、筛选和管理所有倒计时事件</p>
+                </div>
+                <button id="close-calendar" class="close-btn" aria-label="关闭日历">&times;</button>
+            </div>
+            <div class="calendar-toolbar">
                 <div class="cal-controls">
-                    <button id="cal-prev" class="cal-nav-btn">◀</button>
-                    <span id="cal-month-year" class="cal-title">2026年 4月</span>
-                    <button id="cal-next" class="cal-nav-btn">▶</button>
+                    <button id="cal-prev" class="cal-nav-btn" aria-label="上一段">‹</button>
+                    <button id="cal-today" class="secondary-btn sm-btn">今天</button>
+                    <button id="cal-next" class="cal-nav-btn" aria-label="下一段">›</button>
+                    <span id="cal-month-year" class="cal-title"></span>
                 </div>
-                <button id="close-calendar" class="close-btn">&times;</button>
+                <div class="calendar-actions">
+                    <div class="segmented-control" role="group" aria-label="日历视图">
+                        <button class="calendar-view-btn active" data-view="month">月</button>
+                        <button class="calendar-view-btn" data-view="week">周</button>
+                        <button class="calendar-view-btn" data-view="day">日</button>
+                    </div>
+                    <select id="calendar-filter" class="theme-select input-element" aria-label="事件筛选">
+                        <option value="all">全部事件</option>
+                        <option value="upcoming">未来事件</option>
+                        <option value="past">已过去</option>
+                        <option value="today">今天</option>
+                        <option value="with-city">有城市</option>
+                    </select>
+                    <button id="calendar-add-btn" class="primary-btn sm-btn">新建</button>
+                </div>
             </div>
-            <div class="calendar-wrapper">
-                <div class="cal-weekdays">
-                    <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
-                </div>
-                <div class="cal-days" id="cal-days-grid">
-                    <!-- Days generated by JS -->
-                </div>
-            </div>
+            <div id="calendar-summary" class="calendar-summary"></div>
+            <div id="calendar-view" class="calendar-view"></div>
         </div>
     </div>
 
-    <!-- Event Setup Modal Overlay -->
     <div class="modal-overlay hidden" id="modal-overlay">
         <div class="glass-container modal-box event-modal">
             <div class="modal-header">
                 <h2 id="modal-title">添加新的倒计时</h2>
-                <button id="close-modal" class="close-btn">&times;</button>
+                <button id="close-modal" class="close-btn" aria-label="关闭事件表单">&times;</button>
             </div>
             <div class="setup-section">
                 <input type="hidden" id="editing-event-id" value="">
                 <div class="input-group">
                     <label for="event-name">事件名称</label>
-                    <input type="text" id="event-name" class="input-element" placeholder="例如：新年、项目上线..."
-                        autocomplete="off">
+                    <input type="text" id="event-name" class="input-element" placeholder="例如：新年、项目上线、生日" autocomplete="off">
                 </div>
                 <div class="input-group">
-                    <label for="event-time">目标时间 (精确到秒)</label>
+                    <label for="event-time">目标时间</label>
                     <input type="datetime-local" id="event-time" class="input-element" step="1">
                 </div>
                 <div class="input-group">
                     <label for="event-city">关联城市（可选，用于天气查询）</label>
-                    <input type="text" id="event-city" class="input-element" placeholder="例如：北京、Shanghai..." autocomplete="off">
+                    <input type="text" id="event-city" class="input-element" placeholder="例如：北京、Shanghai、London" autocomplete="off">
                 </div>
                 <button id="save-btn" class="primary-btn submit-btn">保存记录</button>
             </div>
         </div>
     </div>
 
-    <!-- Template for Countdown Card -->
     <template id="card-template">
         <div class="countdown-card glass-panel">
             <div class="card-header">
@@ -134,15 +144,9 @@
                     <span class="card-city hidden"></span>
                 </div>
                 <div class="card-actions">
-                    <button class="weather-btn action-btn text-btn hidden" title="查看天气">
-                        🌤
-                    </button>
-                    <button class="edit-btn action-btn text-btn" title="编辑记录">
-                        ✏️
-                    </button>
-                    <button class="delete-btn action-btn text-btn" title="删除记录">
-                        ❌
-                    </button>
+                    <button class="weather-btn action-btn text-btn hidden" title="查看天气">天气</button>
+                    <button class="edit-btn action-btn text-btn" title="编辑记录">编辑</button>
+                    <button class="delete-btn action-btn text-btn" title="删除记录">删除</button>
                 </div>
             </div>
 
@@ -174,7 +178,7 @@
         </div>
     </template>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 
 </html>

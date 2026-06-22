@@ -1,6 +1,5 @@
 import argparse
 import json
-import sys
 
 from .agent import WeatherAgent
 from .config import load_settings
@@ -9,7 +8,7 @@ from .config import load_settings
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="查询城市天气并生成出行建议。")
     parser.add_argument("city", nargs="?", help="要查询的城市，例如：北京、Shanghai、London")
-    parser.add_argument("--json", action="store_true", help="以JSON格式输出结果")
+    parser.add_argument("--json", action="store_true", help="以 JSON 格式输出结果")
     return parser.parse_args()
 
 
@@ -29,7 +28,7 @@ def main() -> None:
         if args.json:
             print(json.dumps({"error": str(exc)}, ensure_ascii=False))
         else:
-            print(f"错误:{exc}")
+            print(f"错误：{exc}")
         return
 
     if args.json:

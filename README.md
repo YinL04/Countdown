@@ -5,10 +5,10 @@
 ## 功能
 
 - 多倒计时卡片：同时追踪多个事件，精确到秒。
-- 事件日历：在月历中查看事件日期。
+- 完整日历：支持月 / 周 / 日视图、事件筛选、点日期新建、点事件编辑。
 - 多主题：现代科幻、商务办公、复古手机、复古电脑。
-- 本地保存：倒计时数据保存在浏览器本地存储中。
-- 天气建议：为事件填写城市后，可调用 Python Agent 获取天气、出行建议和景点推荐。
+- 本地保存：倒计时数据保存在 Electron 用户数据目录下的 JSON 文件中，并支持导入导出。
+- 天气建议：为事件填写城市后，可调用 Python Agent 获取天气、出行建议和景点推荐，渲染层通过 preload API 调用主进程。
 - 可选 LLM 增强：配置 OpenAI 兼容接口后，天气建议会优先使用大模型生成；未配置时使用内置规则。
 
 ## 项目结构
@@ -19,6 +19,8 @@
 │   ├── main/              # Electron 主进程
 │   │   └── main.js
 │   └── renderer/          # 页面、样式和渲染层逻辑
+│       ├── css/
+│       ├── js/
 │       ├── index.html
 │       ├── script.js
 │       └── style.css
@@ -57,6 +59,12 @@ cp .env.example .env
 npm start
 ```
 
+检查 JavaScript 语法：
+
+```bash
+npm run check
+```
+
 ## 天气 Agent
 
 渲染层通过以下命令调用天气 Agent：
@@ -72,4 +80,3 @@ python -m weather_agent <city>
 ```bash
 npm run build
 ```
-

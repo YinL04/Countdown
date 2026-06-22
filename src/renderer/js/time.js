@@ -12,4 +12,4 @@ function updateAnimate(element, newValue) {
     }, 150);
 }
 
-module.exports = { formatTime, updateAnimate };
+export { formatTime, updateAnimate };

@@ -1,6 +1,3 @@
-const { execFile } = require('child_process');
-const path = require('path');
-
 function setList(container, items) {
     container.innerHTML = '';
 
@@ -29,79 +26,75 @@ function setSummary(container, summary) {
 }
 
 function createWeatherPanel(elements) {
+    const cache = new Map();
+    let activeCity = '';
+
     const showWeatherPanel = () => {
         elements.weatherPanel.classList.remove('hidden');
         elements.weatherContent.classList.add('hidden');
         elements.weatherLoading.classList.remove('hidden');
         elements.weatherError.classList.add('hidden');
+        elements.refreshWeatherBtn.classList.remove('hidden');
     };
 
     const hideWeatherPanel = () => {
         elements.weatherPanel.classList.add('hidden');
     };
 
-    const renderWeather = (data) => {
+    const renderWeather = (data, city, fromCache = false) => {
         elements.weatherLoading.classList.add('hidden');
         elements.weatherContent.classList.remove('hidden');
+        elements.weatherError.classList.add('hidden');
 
         setSummary(elements.weatherSummary, data.summary);
         setList(elements.weatherTips, data.tips);
         setList(elements.weatherAttractions, data.attractions);
+
+        const updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
+        elements.weatherMeta.classList.remove('hidden');
+        elements.weatherMeta.textContent = `${city} · ${fromCache ? '上次结果' : '刚刚更新'} · ${updatedAt.toLocaleString()}`;
     };
 
     const showWeatherError = (message) => {
         elements.weatherLoading.classList.add('hidden');
-        elements.weatherContent.classList.add('hidden');
         elements.weatherError.classList.remove('hidden');
         elements.weatherError.textContent = message;
     };
 
-    const fetchWeather = (city) => {
+    const fetchWeather = async (city, { force = false } = {}) => {
+        activeCity = city;
         showWeatherPanel();
         elements.weatherCityLabel.textContent = city;
         elements.weatherPanelTitle.textContent = `${city} - 天气出行建议`;
 
-        const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+        if (!force && cache.has(city)) {
+            renderWeather(cache.get(city), city, true);
+            return;
+        }
 
-        execFile(pythonCmd, ['-m', 'weather_agent', city], {
-            cwd: path.join(__dirname, '..', '..', '..'),
-            timeout: 15000,
-            encoding: 'utf-8',
-            env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
-        }, (error, stdout, stderr) => {
-            if (error) {
-                if (error.killed) {
-                    showWeatherError('天气查询超时，请稍后重试。');
-                } else if (error.code === 'ENOENT') {
-                    showWeatherError('未找到 Python 环境，请确保已安装 Python 并添加到系统 PATH。');
-                } else {
-                    showWeatherError(`天气查询失败：${stderr || error.message}`);
-                }
+        const data = await window.countdownAPI.fetchWeather(city);
+        if (data.error) {
+            if (cache.has(city)) {
+                renderWeather(cache.get(city), city, true);
+                showWeatherError(`${data.error} 已保留上一次结果。`);
                 return;
             }
+            elements.weatherContent.classList.add('hidden');
+            showWeatherError(data.error);
+            return;
+        }
 
-            const text = stdout.trim();
-            if (!text) {
-                showWeatherError('天气查询返回为空，请稍后重试。');
-                return;
-            }
-
-            try {
-                const data = JSON.parse(text);
-                if (data.error) {
-                    showWeatherError(`天气查询出错：${data.error}`);
-                    return;
-                }
-                renderWeather(data);
-            } catch (parseError) {
-                showWeatherError('天气数据解析失败，请稍后重试。');
-            }
-        });
+        const enriched = { ...data, updatedAt: new Date().toISOString() };
+        cache.set(city, enriched);
+        renderWeather(enriched, city);
     };
 
     elements.closeWeatherBtn.addEventListener('click', hideWeatherPanel);
+    elements.refreshWeatherBtn.addEventListener('click', () => {
+        if (activeCity) fetchWeather(activeCity, { force: true });
+    });
 
     return { fetchWeather, hideWeatherPanel };
 }
 
-module.exports = { createWeatherPanel };
+export { createWeatherPanel };

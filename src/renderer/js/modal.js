@@ -8,7 +8,7 @@ function createEventModal({ elements, getCountdowns, setCountdowns, onSave }) {
         elements.modalOverlay.classList.add('hidden');
     };
 
-    const openModal = (editData = null) => {
+    const openModal = (editData = null, defaults = {}) => {
         if (editData) {
             elements.modalTitle.textContent = '编辑倒计时';
             elements.eventNameInput.value = editData.name;
@@ -19,9 +19,12 @@ function createEventModal({ elements, getCountdowns, setCountdowns, onSave }) {
             elements.modalTitle.textContent = '添加倒计时';
             elements.eventNameInput.value = '';
 
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            elements.eventTimeInput.value = toDateTimeLocalValue(tomorrow.getTime());
+            const date = defaults.date ? new Date(defaults.date) : new Date();
+            if (!defaults.date) date.setDate(date.getDate() + 1);
+            if (defaults.date && date.getHours() === 0 && date.getMinutes() === 0) {
+                date.setHours(9, 0, 0, 0);
+            }
+            elements.eventTimeInput.value = toDateTimeLocalValue(date.getTime());
 
             elements.eventCityInput.value = '';
             elements.editingEventId.value = '';
@@ -75,4 +78,4 @@ function createEventModal({ elements, getCountdowns, setCountdowns, onSave }) {
     return { openModal, closeModal };
 }
 
-module.exports = { createEventModal };
+export { createEventModal };

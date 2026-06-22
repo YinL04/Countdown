@@ -18,8 +18,9 @@ class WeatherReport:
     raw: dict[str, Any]
 
     def summary(self) -> str:
-        temp = "未知" if self.temp_c is None else f"{self.temp_c}摄氏度"
-        return f"{self.city}当前天气:{self.weather_desc}，气温{temp}"
+        temp = "未知" if self.temp_c is None else f"{self.temp_c} 摄氏度"
+        feels = "" if self.feels_like_c is None else f"，体感 {self.feels_like_c} 摄氏度"
+        return f"{self.city}当前天气：{self.weather_desc}，气温 {temp}{feels}。"
 
 
 def _to_int(value: Any) -> int | None:
@@ -37,9 +38,7 @@ def _to_float(value: Any) -> float | None:
 
 
 def get_weather(city: str, *, lang: str = "zh", timeout: float = 10.0) -> WeatherReport:
-    """
-    通过调用 wttr.in API 查询真实的天气信息。
-    """
+    """通过 wttr.in API 查询实时天气。"""
     safe_city = quote(city.strip())
     url = f"https://wttr.in/{safe_city}?format=j1&lang={quote(lang)}"
 
@@ -63,16 +62,14 @@ def get_weather(city: str, *, lang: str = "zh", timeout: float = 10.0) -> Weathe
             raw=data,
         )
     except requests.exceptions.RequestException as exc:
-        raise RuntimeError(f"查询天气时遇到网络问题 - {exc}") from exc
+        raise RuntimeError(f"查询天气时遇到网络问题：{exc}") from exc
     except (KeyError, IndexError, ValueError) as exc:
-        raise RuntimeError(f"解析天气数据失败，可能是城市名称无效 - {exc}") from exc
+        raise RuntimeError(f"解析天气数据失败，可能是城市名称无效：{exc}") from exc
 
 
 def get_weather_text(city: str) -> str:
-    """
-    兼容用户提供的工具形式：返回一句自然语言天气描述。
-    """
+    """兼容工具式调用：返回一句自然语言天气描述。"""
     try:
         return get_weather(city).summary()
     except RuntimeError as exc:
-        return f"错误:{exc}"
+        return f"错误：{exc}"

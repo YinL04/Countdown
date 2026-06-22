@@ -1,14 +1,14 @@
-const { getDomElements } = require('./dom');
-const { loadCountdowns, saveCountdowns } = require('./storage');
-const { initTheme } = require('./theme');
-const { createCountdownRenderer } = require('./countdown');
-const { createEventModal } = require('./modal');
-const { createWeatherPanel } = require('./weather');
-const { createCalendar } = require('./calendar');
+import { getDomElements } from './dom.js';
+import { loadCountdowns, saveCountdowns, exportCountdowns, importCountdowns } from './storage.js';
+import { initTheme } from './theme.js';
+import { createCountdownRenderer } from './countdown.js';
+import { createEventModal } from './modal.js';
+import { createWeatherPanel } from './weather.js';
+import { createCalendar } from './calendar.js';
 
-function initApp() {
+async function initApp() {
     const elements = getDomElements();
-    let countdowns = loadCountdowns();
+    let countdowns = await loadCountdowns();
 
     const getCountdowns = () => countdowns;
     const setCountdowns = (nextCountdowns) => {
@@ -21,8 +21,8 @@ function initApp() {
     let renderCards = () => {};
     let renderCalendar = () => {};
 
-    const persistAndRender = () => {
-        saveCountdowns(countdowns);
+    const persistAndRender = async () => {
+        await saveCountdowns(countdowns);
         renderCards();
         renderCalendar();
     };
@@ -44,10 +44,28 @@ function initApp() {
     });
     renderCards = countdownRenderer.renderCards;
 
-    const calendar = createCalendar({ elements, getCountdowns });
+    const calendar = createCalendar({
+        elements,
+        getCountdowns,
+        onEdit: eventModal.openModal,
+        onCreate: (date) => eventModal.openModal(null, { date })
+    });
     renderCalendar = calendar.renderCalendar;
+
+    elements.exportBtn.addEventListener('click', async () => {
+        const result = await exportCountdowns(countdowns);
+        if (!result.canceled) alert('导出完成。');
+    });
+
+    elements.importBtn.addEventListener('click', async () => {
+        const result = await importCountdowns();
+        if (result.canceled) return;
+        setCountdowns(result.countdowns);
+        await persistAndRender();
+        alert('导入完成。');
+    });
 
     renderCards();
 }
 
-module.exports = { initApp };
+export { initApp };

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+import json
 
 from .config import Settings
 from .tools import WeatherReport, get_weather
@@ -61,7 +62,7 @@ class WeatherAgent:
 
     def _generate_with_llm(self, report: WeatherReport) -> AgentAnswer | None:
         prompt = f"""
-你是一个中文天气出行 agent。请基于真实天气信息，给用户简洁、实用的当天出行建议，并推荐这个城市适合游览的景点。
+你是一个中文天气出行助手。请基于真实天气信息，给用户简洁、实用、克制的当天出行建议，并推荐这个城市适合游览的景点。
 
 城市：{report.city}
 天气：{report.weather_desc}
@@ -72,7 +73,7 @@ class WeatherAgent:
 降水 mm：{report.precip_mm}
 紫外线指数：{report.uv_index}
 
-你必须严格以 JSON 格式输出，不要输出任何其他内容。JSON 格式如下：
+必须严格输出 JSON，不要输出任何其他内容。格式如下：
 {{
   "summary": "一句话天气概况",
   "tips": ["出行建议1", "出行建议2", "出行建议3"],
@@ -80,9 +81,9 @@ class WeatherAgent:
 }}
 
 要求：
-1. summary：用一句话说明当前天气情况。
-2. tips：3 条当天出行建议，每条一句话。
-3. attrations：推荐 3-5 个该城市旅游景点，每个包含简短说明。
+1. summary 用一句话说明当前天气。
+2. tips 给 3 条当天出行建议，每条一句话。
+3. attractions 推荐 3-5 个该城市旅游景点，每个包含简短说明。
 4. 不要编造具体门票价格、开放时间或临时活动。
 """.strip()
 
@@ -90,34 +91,38 @@ class WeatherAgent:
             response = self.client.chat.completions.create(
                 model=self.settings.openai_model,
                 messages=[
-                    {"role": "system", "content": "你是可靠、克制、实用的中文旅行天气助手。你只输出JSON，不输出其他任何内容。"},
+                    {
+                        "role": "system",
+                        "content": "你是可靠、克制、实用的中文旅行天气助手。你只输出 JSON，不输出其他任何内容。",
+                    },
                     {"role": "user", "content": prompt},
                 ],
                 temperature=0.4,
             )
             raw = (response.choices[0].message.content or "").strip()
-            # Strip markdown code fences if present
             if raw.startswith("```"):
                 raw = raw.split("\n", 1)[-1]
             if raw.endswith("```"):
                 raw = raw.rsplit("```", 1)[0]
-            raw = raw.strip()
 
-            import json
-            data = json.loads(raw)
+            data = json.loads(raw.strip())
             summary = data.get("summary", report.summary())
             tips = data.get("tips", [])
             attractions = data.get("attractions", [])
             text = self._format_text(summary, tips, attractions)
             return AgentAnswer(
-                city=report.city, text=text, used_llm=True,
-                summary=summary, tips=tips, attractions=attractions,
+                city=report.city,
+                text=text,
+                used_llm=True,
+                summary=summary,
+                tips=tips,
+                attractions=attractions,
             )
         except Exception as exc:
             rule_result = self._generate_rule_based(report)
             return AgentAnswer(
                 city=rule_result.city,
-                text=rule_result.text + f"\n\n提示：大模型建议生成失败，已使用内置规则。错误信息：{exc}",
+                text=f"{rule_result.text}\n\n提示：大模型建议生成失败，已使用内置规则。错误信息：{exc}",
                 used_llm=False,
                 summary=rule_result.summary,
                 tips=rule_result.tips,
@@ -130,8 +135,12 @@ class WeatherAgent:
         summary = report.summary()
         text = self._format_text(summary, advice, attractions)
         return AgentAnswer(
-            city=report.city, text=text, used_llm=False,
-            summary=summary, tips=advice, attractions=attractions,
+            city=report.city,
+            text=text,
+            used_llm=False,
+            summary=summary,
+            tips=advice,
+            attractions=attractions,
         )
 
     def _format_text(self, summary: str, tips: list[str], attractions: list[str]) -> str:
@@ -153,7 +162,7 @@ class WeatherAgent:
         if any(word in desc for word in RAIN_KEYWORDS) or (report.precip_mm or 0) > 0:
             advice.append("带伞或轻便雨衣，优先安排博物馆、展馆、商圈等室内路线。")
         elif any(word in desc for word in SNOW_KEYWORDS):
-            advice.append("注意保暖和防滑，鞋子选择抓地力好的款式，预留更多交通时间。")
+            advice.append("注意保暖和防滑，鞋子选择抓地力好的款式，并预留更多交通时间。")
         elif any(word in desc for word in SUN_KEYWORDS):
             advice.append("适合户外步行和城市观景，午后注意补水。")
         elif any(word in desc for word in CLOUD_KEYWORDS):
@@ -184,7 +193,7 @@ class WeatherAgent:
 
         if rainy or very_hot or very_cold:
             return [
-                f"{report.city}博物馆或城市展览馆：室内为主，受天气影响小。",
+                f"{report.city}博物馆或城市展览馆：室内为主，受天气影响较小。",
                 f"{report.city}历史街区：选择有商铺、咖啡馆和室内休息点的路线。",
                 f"{report.city}大型商圈或美食街：适合把餐饮、购物和短途散步放在一起。",
                 f"{report.city}地标建筑观景区：天气间隙前往，注意能见度和排队时间。",

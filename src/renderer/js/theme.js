@@ -13,4 +13,4 @@ function initTheme(themeSelector) {
     });
 }
 
-module.exports = { initTheme };
+export { initTheme };
