@@ -12,13 +12,23 @@
 }
 
 .weather-city,
-.weather-meta {
+.weather-meta,
+.weather-context {
     color: var(--text-muted);
     font-size: 0.88rem;
 }
 
 .weather-meta {
     margin: -0.35rem 0 0.85rem;
+}
+
+.weather-context {
+    margin: 0.4rem 0 0.85rem;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: var(--surface-bg);
+    line-height: 1.5;
 }
 
 .weather-content {

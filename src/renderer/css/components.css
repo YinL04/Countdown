@@ -137,13 +137,29 @@ input.input-element:focus,
     font-size: 1.08rem;
 }
 
+.card-category,
 .card-city {
     flex: 0 0 auto;
+    font-weight: 700;
+}
+
+.card-category {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.18);
+    color: var(--primary-color);
+    font-size: 0.75rem;
+}
+
+.card-city {
     border-radius: 999px;
     background: rgba(99, 102, 241, 0.16);
     color: var(--primary-color);
     font-size: 0.75rem;
-    font-weight: 700;
     padding: 0.15rem 0.5rem;
 }
 
@@ -152,6 +168,36 @@ input.input-element:focus,
     gap: 0.35rem;
     flex-wrap: wrap;
     justify-content: flex-end;
+}
+
+.card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+}
+
+.reminder-label {
+    color: var(--primary-color);
+}
+
+.card-notes {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.countdown-card.is-past .card-title::after {
+    content: "（已过去）";
+    color: var(--warning-color);
+    font-size: 0.86rem;
+}
+
+.countdown-card.is-archived {
+    opacity: 0.72;
 }
 
 .time-blocks {
@@ -250,7 +296,44 @@ input.input-element:focus,
     font-weight: 700;
 }
 
+.two-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.reminder-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.6rem;
+}
+
+.reminder-options label {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 40px;
+    margin: 0;
+    padding: 0.55rem 0.65rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: var(--surface-bg);
+    color: var(--text-main);
+    font-size: 0.88rem;
+}
+
+.reminder-options input {
+    flex: 0 0 auto;
+}
+
 .submit-btn {
     width: 100%;
     margin-top: 0.4rem;
+}
+
+@media (max-width: 620px) {
+    .two-columns,
+    .reminder-options {
+        grid-template-columns: 1fr;
+    }
 }

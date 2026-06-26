@@ -17,7 +17,7 @@
     <div class="app-container" id="app-container">
         <header class="top-nav glass-panel theme-header">
             <div class="nav-brand">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="brand-svg">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="brand-svg" aria-hidden="true">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
@@ -32,12 +32,67 @@
                 </select>
                 <button id="import-btn" class="secondary-btn sm-btn nav-btn">导入</button>
                 <button id="export-btn" class="secondary-btn sm-btn nav-btn">导出</button>
+                <button id="import-ics-btn" class="secondary-btn sm-btn nav-btn">导入日历</button>
+                <button id="export-ics-btn" class="secondary-btn sm-btn nav-btn">导出日历</button>
+                <button id="mini-window-btn" class="secondary-btn sm-btn nav-btn">小窗</button>
                 <button id="open-calendar-btn" class="secondary-btn sm-btn nav-btn">日历</button>
                 <button id="add-new-btn" class="primary-btn sm-btn nav-btn">添加事件</button>
             </div>
         </header>
 
         <main class="dashboard">
+            <section id="backup-banner" class="backup-banner glass-panel hidden">
+                <div>
+                    <strong>建议导出一次本地备份</strong>
+                    <span id="backup-message">你的重要日期只保存在本机，定期备份更安心。</span>
+                </div>
+                <button id="backup-now-btn" class="secondary-btn sm-btn">立即导出</button>
+            </section>
+
+            <section class="overview-grid" aria-label="事件概览">
+                <div class="overview-panel glass-panel">
+                    <div class="section-header">
+                        <h2>今日事件</h2>
+                        <span id="today-count" class="section-count">0</span>
+                    </div>
+                    <div id="today-list" class="mini-event-list"></div>
+                </div>
+                <div class="overview-panel glass-panel">
+                    <div class="section-header">
+                        <h2>近期重点</h2>
+                        <span id="upcoming-count" class="section-count">0</span>
+                    </div>
+                    <div id="upcoming-list" class="mini-event-list"></div>
+                </div>
+            </section>
+
+            <section class="toolbar glass-panel" aria-label="筛选和排序">
+                <input type="search" id="search-input" class="input-element toolbar-search" placeholder="搜索事件、城市或备注">
+                <select id="category-filter" class="theme-select input-element" aria-label="按分类筛选">
+                    <option value="all">全部分类</option>
+                    <option value="birthday">生日</option>
+                    <option value="work">项目</option>
+                    <option value="exam">考试</option>
+                    <option value="travel">旅行</option>
+                    <option value="anniversary">纪念日</option>
+                    <option value="custom">其他</option>
+                </select>
+                <select id="status-filter" class="theme-select input-element" aria-label="按状态筛选">
+                    <option value="active">未归档</option>
+                    <option value="upcoming">未来事件</option>
+                    <option value="today">今天</option>
+                    <option value="past">已过去</option>
+                    <option value="archived">已归档</option>
+                    <option value="all">全部状态</option>
+                </select>
+                <select id="sort-select" class="theme-select input-element" aria-label="排序方式">
+                    <option value="time-asc">时间从近到远</option>
+                    <option value="time-desc">时间从远到近</option>
+                    <option value="created-desc">最近创建</option>
+                    <option value="category">按分类</option>
+                </select>
+            </section>
+
             <section id="weather-panel" class="weather-panel hidden">
                 <div class="weather-panel-header">
                     <h2 id="weather-panel-title">天气出行建议</h2>
@@ -45,6 +100,7 @@
                     <button id="refresh-weather" class="secondary-btn sm-btn hidden">刷新</button>
                     <button id="close-weather" class="close-btn" aria-label="关闭天气面板">&times;</button>
                 </div>
+                <div id="weather-context" class="weather-context hidden"></div>
                 <div id="weather-meta" class="weather-meta hidden"></div>
                 <div id="weather-content" class="weather-content">
                     <div class="weather-section glass-panel">
@@ -69,7 +125,7 @@
 
             <div id="cards-container" class="cards-grid"></div>
             <div id="empty-state" class="empty-state hidden">
-                <p>目前没有倒计时，添加一个重要日子吧。</p>
+                <p>目前没有匹配的倒计时。添加一个重要日子，或者调整筛选条件。</p>
             </div>
         </main>
     </div>
@@ -127,9 +183,34 @@
                     <label for="event-time">目标时间</label>
                     <input type="datetime-local" id="event-time" class="input-element" step="1">
                 </div>
+                <div class="input-group two-columns">
+                    <div>
+                        <label for="event-category">分类</label>
+                        <select id="event-category" class="theme-select input-element">
+                            <option value="birthday">生日</option>
+                            <option value="work">项目</option>
+                            <option value="exam">考试</option>
+                            <option value="travel">旅行</option>
+                            <option value="anniversary">纪念日</option>
+                            <option value="custom">其他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="event-city">关联城市</label>
+                        <input type="text" id="event-city" class="input-element" placeholder="例如：北京、Shanghai、London" autocomplete="off">
+                    </div>
+                </div>
                 <div class="input-group">
-                    <label for="event-city">关联城市（可选，用于天气查询）</label>
-                    <input type="text" id="event-city" class="input-element" placeholder="例如：北京、Shanghai、London" autocomplete="off">
+                    <label>提醒</label>
+                    <div class="reminder-options">
+                        <label><input type="checkbox" class="reminder-option" value="1440"> 提前 1 天</label>
+                        <label><input type="checkbox" class="reminder-option" value="60"> 提前 1 小时</label>
+                        <label><input type="checkbox" class="reminder-option" value="10"> 提前 10 分钟</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="event-notes">备注</label>
+                    <input type="text" id="event-notes" class="input-element" placeholder="可写准备事项、地点或链接" autocomplete="off">
                 </div>
                 <button id="save-btn" class="primary-btn submit-btn">保存记录</button>
             </div>
@@ -140,15 +221,23 @@
         <div class="countdown-card glass-panel">
             <div class="card-header">
                 <div class="card-title-group">
+                    <span class="card-category"></span>
                     <h3 class="card-title"></h3>
                     <span class="card-city hidden"></span>
                 </div>
                 <div class="card-actions">
                     <button class="weather-btn action-btn text-btn hidden" title="查看天气">天气</button>
                     <button class="edit-btn action-btn text-btn" title="编辑记录">编辑</button>
+                    <button class="archive-btn action-btn text-btn" title="归档记录">归档</button>
+                    <button class="restart-btn action-btn text-btn hidden" title="重新设置">重设</button>
                     <button class="delete-btn action-btn text-btn" title="删除记录">删除</button>
                 </div>
             </div>
+            <div class="card-meta">
+                <span class="target-date"></span>
+                <span class="reminder-label"></span>
+            </div>
+            <p class="card-notes hidden"></p>
 
             <div class="time-blocks">
                 <div class="time-block">

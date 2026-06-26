@@ -1,3 +1,5 @@
+import { categoryMeta, eventStatus, isSameDay } from './events.js';
+
 const DAY_NAMES = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
 
 function startOfDay(date) {
@@ -12,22 +14,12 @@ function addDays(date, amount) {
     return next;
 }
 
-function isSameDay(a, b) {
-    return a.getFullYear() === b.getFullYear()
-        && a.getMonth() === b.getMonth()
-        && a.getDate() === b.getDate();
-}
-
 function formatDate(date) {
     return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
 }
 
 function formatTime(date) {
     return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-}
-
-function eventStatus(event) {
-    return event.targetTime <= Date.now() ? 'past' : 'upcoming';
 }
 
 function createCalendar({ elements, getCountdowns, onEdit, onCreate }) {
@@ -40,11 +32,12 @@ function createCalendar({ elements, getCountdowns, onEdit, onCreate }) {
         return [...getCountdowns()]
             .filter((event) => {
                 const date = new Date(event.targetTime);
+                if (filterMode !== 'all' && event.archived) return false;
                 if (filterMode === 'upcoming') return event.targetTime > Date.now();
                 if (filterMode === 'past') return event.targetTime <= Date.now();
                 if (filterMode === 'today') return isSameDay(date, today);
                 if (filterMode === 'with-city') return Boolean(event.city && event.city.trim());
-                return true;
+                return !event.archived;
             })
             .sort((a, b) => a.targetTime - b.targetTime);
     };
@@ -53,11 +46,12 @@ function createCalendar({ elements, getCountdowns, onEdit, onCreate }) {
 
     const createEventPill = (event, compact = false) => {
         const button = document.createElement('button');
+        const category = categoryMeta(event.category);
         button.className = `calendar-event ${eventStatus(event)}${compact ? ' compact' : ''}`;
         button.type = 'button';
         button.title = event.name;
         const date = new Date(event.targetTime);
-        button.textContent = compact ? event.name : `${formatTime(date)} ${event.name}`;
+        button.textContent = compact ? `${category.mark} ${event.name}` : `${formatTime(date)} · ${category.label} · ${event.name}`;
         button.addEventListener('click', (clickEvent) => {
             clickEvent.stopPropagation();
             onEdit(event);
@@ -80,17 +74,18 @@ function createCalendar({ elements, getCountdowns, onEdit, onCreate }) {
 
     const renderSummary = () => {
         const all = getCountdowns();
+        const active = all.filter((event) => !event.archived);
         const visible = getFilteredEvents();
-        const upcoming = all.filter((event) => event.targetTime > Date.now()).length;
-        const past = all.length - upcoming;
-        elements.calendarSummary.textContent = `共 ${all.length} 个事件 · 未来 ${upcoming} 个 · 已过去 ${past} 个 · 当前显示 ${visible.length} 个`;
+        const upcoming = active.filter((event) => event.targetTime > Date.now()).length;
+        const past = active.length - upcoming;
+        elements.calendarSummary.textContent = `共 ${active.length} 个未归档事件 · 未来 ${upcoming} 个 · 已过去 ${past} 个 · 当前显示 ${visible.length} 个`;
     };
 
     const renderMonth = () => {
         const year = anchorDate.getFullYear();
         const month = anchorDate.getMonth();
         elements.calMonthYear.textContent = `${year}年${month + 1}月`;
-        elements.calendarSubtitle.textContent = '月视图会直接展示事件标题，点击空白日期可快速新建事件。';
+        elements.calendarSubtitle.textContent = '月视图展示事件标题，点击空白日期可快速新建事件。';
 
         const grid = document.createElement('div');
         grid.className = 'calendar-month-grid';
@@ -215,6 +210,10 @@ function createCalendar({ elements, getCountdowns, onEdit, onCreate }) {
 
     elements.closeCalendarBtn.addEventListener('click', () => {
         elements.calendarOverlay.classList.add('hidden');
+    });
+
+    elements.calendarOverlay.addEventListener('click', (event) => {
+        if (event.target === elements.calendarOverlay) elements.calendarOverlay.classList.add('hidden');
     });
 
     elements.calPrev.addEventListener('click', () => moveAnchor(-1));

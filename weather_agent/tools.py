@@ -20,7 +20,7 @@ class WeatherReport:
     def summary(self) -> str:
         temp = "未知" if self.temp_c is None else f"{self.temp_c} 摄氏度"
         feels = "" if self.feels_like_c is None else f"，体感 {self.feels_like_c} 摄氏度"
-        return f"{self.city}当前天气：{self.weather_desc}，气温 {temp}{feels}。"
+        return f"{self.city} 当前天气：{self.weather_desc}，气温 {temp}{feels}。"
 
 
 def _to_int(value: Any) -> int | None:

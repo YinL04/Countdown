@@ -5,5 +5,10 @@ contextBridge.exposeInMainWorld('countdownAPI', {
   saveCountdowns: (countdowns) => ipcRenderer.invoke('countdowns:save', countdowns),
   exportCountdowns: (countdowns) => ipcRenderer.invoke('countdowns:export', countdowns),
   importCountdowns: () => ipcRenderer.invoke('countdowns:import'),
-  fetchWeather: (city) => ipcRenderer.invoke('weather:fetch', city)
+  exportIcs: (countdowns) => ipcRenderer.invoke('countdowns:export-ics', countdowns),
+  importIcs: () => ipcRenderer.invoke('countdowns:import-ics'),
+  fetchWeather: (city, context) => ipcRenderer.invoke('weather:fetch', city, context),
+  toggleMiniWindow: () => ipcRenderer.invoke('window:toggle-mini'),
+  showError: (title, message) => ipcRenderer.invoke('dialog:error', title, message),
+  showMessage: (title, message) => ipcRenderer.invoke('dialog:message', title, message)
 })

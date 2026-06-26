@@ -63,7 +63,6 @@ class WeatherAgent:
     def _generate_with_llm(self, report: WeatherReport) -> AgentAnswer | None:
         prompt = f"""
 你是一个中文天气出行助手。请基于真实天气信息，给用户简洁、实用、克制的当天出行建议，并推荐这个城市适合游览的景点。
-
 城市：{report.city}
 天气：{report.weather_desc}
 气温：{report.temp_c}
@@ -172,7 +171,7 @@ class WeatherAgent:
 
         if report.temp_c is not None:
             if report.temp_c >= 30:
-                advice.append("气温偏高，避开正午暴晒时段，安排早晚户外活动更舒服。")
+                advice.append("气温偏高，避开正午暴晒时段，安排早晚户外活动更舒适。")
             elif report.temp_c <= 5:
                 advice.append("气温较低，穿厚外套，减少长时间户外等待。")
             else:

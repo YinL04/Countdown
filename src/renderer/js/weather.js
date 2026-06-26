@@ -1,3 +1,5 @@
+import { distanceLabel, formatDateTime } from './events.js';
+
 function setList(container, items) {
     container.innerHTML = '';
 
@@ -25,9 +27,16 @@ function setSummary(container, summary) {
     container.appendChild(paragraph);
 }
 
+function eventWeatherHint(event) {
+    const distance = event.targetTime - Date.now();
+    if (distance < 0) return '事件已过去，以下天气仅供回顾或重新规划参考。';
+    if (distance <= 7 * 86400000) return '事件临近，可以把天气建议直接作为出行准备清单。';
+    return '事件还比较远，天气可能变化较大，建议临近一周再刷新确认。';
+}
+
 function createWeatherPanel(elements) {
     const cache = new Map();
-    let activeCity = '';
+    let activeEvent = null;
 
     const showWeatherPanel = () => {
         elements.weatherPanel.classList.remove('hidden');
@@ -41,7 +50,18 @@ function createWeatherPanel(elements) {
         elements.weatherPanel.classList.add('hidden');
     };
 
-    const renderWeather = (data, city, fromCache = false) => {
+    const renderContext = (event) => {
+        if (!event) {
+            elements.weatherContext.classList.add('hidden');
+            elements.weatherContext.textContent = '';
+            return;
+        }
+
+        elements.weatherContext.classList.remove('hidden');
+        elements.weatherContext.textContent = `${event.name} · ${formatDateTime(event.targetTime)} · ${distanceLabel(event)}。${eventWeatherHint(event)}`;
+    };
+
+    const renderWeather = (data, event, fromCache = false) => {
         elements.weatherLoading.classList.add('hidden');
         elements.weatherContent.classList.remove('hidden');
         elements.weatherError.classList.add('hidden');
@@ -49,10 +69,11 @@ function createWeatherPanel(elements) {
         setSummary(elements.weatherSummary, data.summary);
         setList(elements.weatherTips, data.tips);
         setList(elements.weatherAttractions, data.attractions);
+        renderContext(event);
 
         const updatedAt = data.updatedAt ? new Date(data.updatedAt) : new Date();
         elements.weatherMeta.classList.remove('hidden');
-        elements.weatherMeta.textContent = `${city} · ${fromCache ? '上次结果' : '刚刚更新'} · ${updatedAt.toLocaleString()}`;
+        elements.weatherMeta.textContent = `${event.city} · ${fromCache ? '上次结果' : '刚刚更新'} · ${updatedAt.toLocaleString('zh-CN')}`;
     };
 
     const showWeatherError = (message) => {
@@ -61,21 +82,27 @@ function createWeatherPanel(elements) {
         elements.weatherError.textContent = message;
     };
 
-    const fetchWeather = async (city, { force = false } = {}) => {
-        activeCity = city;
+    const fetchWeather = async (event, { force = false } = {}) => {
+        if (!event || !event.city) return;
+        activeEvent = event;
         showWeatherPanel();
-        elements.weatherCityLabel.textContent = city;
-        elements.weatherPanelTitle.textContent = `${city} - 天气出行建议`;
+        elements.weatherCityLabel.textContent = event.city;
+        elements.weatherPanelTitle.textContent = `${event.name} · ${event.city} 出行建议`;
+        renderContext(event);
 
-        if (!force && cache.has(city)) {
-            renderWeather(cache.get(city), city, true);
+        const cacheKey = `${event.city}:${event.targetTime}`;
+        if (!force && cache.has(cacheKey)) {
+            renderWeather(cache.get(cacheKey), event, true);
             return;
         }
 
-        const data = await window.countdownAPI.fetchWeather(city);
+        const data = await window.countdownAPI.fetchWeather(event.city, {
+            eventName: event.name,
+            targetTime: event.targetTime
+        });
         if (data.error) {
-            if (cache.has(city)) {
-                renderWeather(cache.get(city), city, true);
+            if (cache.has(cacheKey)) {
+                renderWeather(cache.get(cacheKey), event, true);
                 showWeatherError(`${data.error} 已保留上一次结果。`);
                 return;
             }
@@ -85,13 +112,13 @@ function createWeatherPanel(elements) {
         }
 
         const enriched = { ...data, updatedAt: new Date().toISOString() };
-        cache.set(city, enriched);
-        renderWeather(enriched, city);
+        cache.set(cacheKey, enriched);
+        renderWeather(enriched, event);
     };
 
     elements.closeWeatherBtn.addEventListener('click', hideWeatherPanel);
     elements.refreshWeatherBtn.addEventListener('click', () => {
-        if (activeCity) fetchWeather(activeCity, { force: true });
+        if (activeEvent) fetchWeather(activeEvent, { force: true });
     });
 
     return { fetchWeather, hideWeatherPanel };
